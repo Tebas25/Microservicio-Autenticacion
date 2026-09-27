@@ -1,10 +1,20 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+
+from app.db.session import init_engine
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_engine()
+    yield
+
 
 app = FastAPI(
     title="Auth Service - Bartender Robótico",
     description="Microservicio emisor de JWT y validación de usuarios",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 

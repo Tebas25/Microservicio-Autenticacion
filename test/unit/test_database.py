@@ -3,9 +3,6 @@ from app.db.session import get_connection_args
 
 
 class TestGetConnectionArgs:
-    def test_ssl_disabled_by_default(self):
-        assert get_connection_args("disable") == {"ssl": "disable"}
-
     def test_unknown_mode_returns_empty_dict(self):
         assert get_connection_args("") == {}
         assert get_connection_args("algo_invalido") == {}

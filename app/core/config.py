@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,4 +20,11 @@ class DbSettings(BaseSettings):
         )
 
 
-db_setting = DbSettings()
+@lru_cache
+def get_db_settings() -> DbSettings:
+    """
+    Construye DbSettings de forma perezosa (solo cuando se llama, no al importar
+    el módulo) y cachea el resultado (lru_cache) para no releer el entorno en
+    cada llamada. En tests se puede limpiar el caché con get_db_settings.cache_clear().
+    """
+    return DbSettings()
