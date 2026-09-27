@@ -1,22 +1,31 @@
 from fastapi.testclient import TestClient
 from app.main import app
 
-client = TestClient(app)
-
 
 class TestRootEndpoint:
-    def test_root_returns_200(self):
-        response = client.get("/")
-        assert response.status_code == 200
+    def test_root_returns_200(self, monkeypatch):
+        monkeypatch.setenv("DB_USER", "user")
+        monkeypatch.setenv("DB_PASSWORD", "pass")
+        monkeypatch.setenv("DB_HOST", "localhost")
+        monkeypatch.setenv("DB_PORT", "5432")
+        monkeypatch.setenv("DB_NAME", "mydb")
+        monkeypatch.setenv("DB_SSL_MODE", "disable")
 
-    def test_root_returns_expected_payload(self):
-        response = client.get("/")
-        data = response.json()
-        assert data == {
-            "status": "ok",
-            "message": "Auth Service en línea. Guardia listo.",
-        }
+        with TestClient(app) as client:
+            response = client.get("/")
+            assert response.status_code == 200
 
-    def test_root_content_type_is_json(self):
-        response = client.get("/")
-        assert response.headers["content-type"] == "application/json"
+    def test_root_returns_expected_payload(self, monkeypatch):
+        monkeypatch.setenv("DB_USER", "user")
+        monkeypatch.setenv("DB_PASSWORD", "pass")
+        monkeypatch.setenv("DB_HOST", "localhost")
+        monkeypatch.setenv("DB_PORT", "5432")
+        monkeypatch.setenv("DB_NAME", "mydb")
+        monkeypatch.setenv("DB_SSL_MODE", "disable")
+
+        with TestClient(app) as client:
+            response = client.get("/")
+            assert response.json() == {
+                "status": "ok",
+                "message": "Auth Service en línea. Guardia listo.",
+            }

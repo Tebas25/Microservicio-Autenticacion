@@ -2,15 +2,15 @@ import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-from app.core.config import DbSettings
+from app.core.config import get_db_settings
 
 
-@pytest.fixture(scope="session")
-def db_settings() -> DbSettings:
-    return DbSettings()
+@pytest.fixture
+def db_settings():
+    return get_db_settings()
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture
 async def engine(db_settings):
     engine = create_async_engine(db_settings.database_url, echo=False)
     yield engine
