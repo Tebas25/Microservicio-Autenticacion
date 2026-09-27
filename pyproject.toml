@@ -10,6 +10,7 @@ requires-python = ">=3.14"
 dependencies = [
     "asyncpg>=0.31.0",
     "cryptography>=50.0.1",
+    "dotenv>=0.9.9",
     "fastapi[standard]>=0.141.1",
     "passlib[bcrypt]>=1.7.4",
     "pyjwt>=2.15.0",
@@ -17,5 +18,20 @@ dependencies = [
     "sqlalchemy>=2.1.1",
 ]
 
+[dependency-groups]
+dev = [
+    "asyncpg>=0.31.0",
+    "black>=26.5.1",
+    "flake8>=7.3.0",
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
+]
+
 [project.scripts]
 micro-auth = "micro_auth:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
