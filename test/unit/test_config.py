@@ -40,4 +40,4 @@ class TestDbSettings:
         monkeypatch.setenv("DB_SSL_MODE", "disable")
 
         with pytest.raises(ValidationError):
-            DbSettings()
+            DbSettings(_env_file=None)

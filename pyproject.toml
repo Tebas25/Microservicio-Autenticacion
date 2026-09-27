@@ -12,6 +12,7 @@ dependencies = [
     "cryptography>=50.0.1",
     "dotenv>=0.9.9",
     "fastapi[standard]>=0.141.1",
+    "greenlet>=3.5.6",
     "passlib[bcrypt]>=1.7.4",
     "pyjwt>=2.15.0",
     "python-dotenv>=1.2.3",
@@ -35,3 +36,4 @@ micro-auth = "micro_auth:main"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["."]
