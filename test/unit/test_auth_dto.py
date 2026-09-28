@@ -2,6 +2,9 @@ import pytest
 from pydantic import ValidationError
 
 from app.schemas.auth_dto import CreateUserDTO
+from email_validator import EmailNotValidError
+
+from app.schemas import auth_dto
 
 VALID_NAME = "Juan Sebastian Perez Gomez Lopez"
 
@@ -50,3 +53,13 @@ def test_invalid_email_rejected():
 def test_short_name_rejected():
     with pytest.raises(ValidationError):
         build(complete_name="Juan")
+
+
+def test_email_validator_error_is_translated(monkeypatch):
+    def boom(*args, **kwargs):
+        raise EmailNotValidError("dominio sin MX")
+
+    monkeypatch.setattr(auth_dto, "validate_email", boom)
+
+    with pytest.raises(ValidationError, match="El correo electrónico no es válido"):
+        build()
