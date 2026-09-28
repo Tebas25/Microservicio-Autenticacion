@@ -2,16 +2,9 @@ import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-import app.models.user_entity
+import app.models.user_entity  # noqa: F401  (registra las tablas en Base.metadata)
 from app.core.config import get_db_settings
 from app.db.session import Base, get_connection_args
-import email_validator
-import pytest
-
-
-@pytest.fixture(autouse=True)
-def _no_dns_email_validation(monkeypatch):
-    monkeypatch.setattr(email_validator, "CHECK_DELIVERABILITY_DEFAULT", False)
 
 
 @pytest.fixture
