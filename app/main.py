@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.db.session import init_engine
+from app.api.v1.routers import router as auth_router
 
 
 @asynccontextmanager
@@ -16,6 +17,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+app.include_router(auth_router)
 
 
 @app.get("/")
