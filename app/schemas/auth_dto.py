@@ -1,6 +1,7 @@
 import re
 from email_validator import EmailNotValidError, validate_email
 from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel
 
 
 class CreateUserDTO(BaseModel):
@@ -28,3 +29,8 @@ class CreateUserDTO(BaseModel):
             )
 
         return v
+
+
+class TokenResponseDTO(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
