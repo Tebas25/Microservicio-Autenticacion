@@ -47,3 +47,34 @@ async def test_create_user_twice_returns_409(client):
     assert first.status_code == 201
     assert second.status_code == 409
     assert second.json() == {"detail": "Email ya registrado"}
+
+
+LOGIN_URL = "/api/v1/auth/login"
+
+
+class TestLoginEndToEnd:
+    async def test_login_succeeds_with_correct_credentials(self, client):
+        await client.post("/api/v1/auth/create", json=BODY)
+
+        response = await client.post(
+            LOGIN_URL, json={"email": BODY["email"], "password": BODY["password"]}
+        )
+
+        assert response.status_code == 200
+        assert "access_token" in response.json()
+
+    async def test_login_fails_with_wrong_password(self, client):
+        await client.post("/api/v1/auth/create", json=BODY)
+
+        response = await client.post(
+            LOGIN_URL, json={"email": BODY["email"], "password": "OtraClave1!"}
+        )
+
+        assert response.status_code == 401
+
+    async def test_login_fails_with_unknown_email(self, client):
+        response = await client.post(
+            LOGIN_URL, json={"email": "no-existe@example.com", "password": "Abcdef1!"}
+        )
+
+        assert response.status_code == 401

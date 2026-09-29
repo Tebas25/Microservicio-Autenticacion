@@ -3,6 +3,10 @@ from unittest.mock import AsyncMock
 import pytest
 from fastapi.testclient import TestClient
 
+from unittest.mock import AsyncMock
+
+from app.core.db_exceptions import InvalidCredentialsError
+
 from app.api.dependencies import get_auth_service
 from app.core.db_exceptions import EmailAlreadyExists
 from app.main import app
@@ -65,3 +69,33 @@ def test_create_user_missing_field_returns_422(client, service):
     response = client.post(URL, json=body)
 
     assert response.status_code == 422
+
+
+LOGIN_URL = "/api/v1/auth/login"
+LOGIN_BODY = {"email": "juan@example.com", "password": "Abcdef1!"}
+
+
+class TestLoginEndpoint:
+    def test_login_returns_200_with_token(self, client, service):
+        service.login_user = AsyncMock(return_value="token-falso")
+
+        response = client.post(LOGIN_URL, json=LOGIN_BODY)
+
+        assert response.status_code == 200
+        assert response.json() == {
+            "access_token": "token-falso",
+            "token_type": "bearer",
+        }
+
+    def test_login_invalid_credentials_returns_401(self, client, service):
+        service.login_user = AsyncMock(side_effect=InvalidCredentialsError())
+
+        response = client.post(LOGIN_URL, json=LOGIN_BODY)
+
+        assert response.status_code == 401
+        assert response.json() == {"detail": "Credenciales Inválidas"}
+
+    def test_login_invalid_email_returns_422(self, client, service):
+        response = client.post(LOGIN_URL, json={**LOGIN_BODY, "email": "no-valido"})
+
+        assert response.status_code == 422

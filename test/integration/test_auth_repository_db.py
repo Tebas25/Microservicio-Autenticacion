@@ -27,3 +27,21 @@ async def test_duplicate_email_raises_and_session_stays_usable(db_session):
     # Tras el rollback la sesión debe seguir funcionando
     result = await db_session.execute(text("SELECT count(*) FROM usuarios_admin"))
     assert result.scalar() == 1
+
+
+class TestObtainUserByEmail:
+    async def test_returns_user_when_exists(self, db_session):
+        repo = AuthRepository(db_session)
+        await repo.create_new_user("a@b.com", "hash", "Nombre Completo")
+
+        found = await repo.obtain_user_by_email("a@b.com")
+
+        assert found is not None
+        assert found.email == "a@b.com"
+
+    async def test_returns_none_when_not_exists(self, db_session):
+        repo = AuthRepository(db_session)
+
+        found = await repo.obtain_user_by_email("no-existe@b.com")
+
+        assert found is None
