@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user_entity import UsuarioAdmin
 from sqlalchemy.exc import IntegrityError
 from app.core.db_exceptions import EmailAlreadyExists
+from sqlalchemy import select
 
 
 class AuthRepository:
@@ -23,3 +24,9 @@ class AuthRepository:
             raise EmailAlreadyExists(email)
         await self.session.refresh(new_user)
         return new_user
+
+    async def obtain_user_by_email(self, email: str) -> UsuarioAdmin | None:
+        result = await self.session.execute(
+            select(UsuarioAdmin).where(UsuarioAdmin.email == email)
+        )
+        return result.scalar_one_or_none()

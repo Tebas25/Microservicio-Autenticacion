@@ -1,3 +1,6 @@
-# app/core/db_exceptions.py
 class EmailAlreadyExists(Exception):
+    pass
+
+
+class InvalidCredentialsError(Exception):
     pass
