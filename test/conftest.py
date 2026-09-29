@@ -29,3 +29,17 @@ def _no_dns_email_validation(monkeypatch):
             return _real_fn(email, **kwargs)
 
         monkeypatch.setattr(module, "validate_email", offline_validate_email)
+
+
+@pytest.fixture
+def env_vars(monkeypatch):
+    """Set all required environment variables for tests"""
+    monkeypatch.setenv("DB_USER", "user")
+    monkeypatch.setenv("DB_PASSWORD", "pass")
+    monkeypatch.setenv("DB_HOST", "localhost")
+    monkeypatch.setenv("DB_PORT", "5432")
+    monkeypatch.setenv("DB_NAME", "mydb")
+    monkeypatch.setenv("DB_SSL_MODE", "disable")
+    monkeypatch.setenv("JWT_PRIVATE_KEY_PATH", "/path/to/private.key")
+    monkeypatch.setenv("JWT_EXPIRE_MINUTES", "60")
+    monkeypatch.setenv("JWT_PUBLIC_KEY_PATH", "/path/to/public.key")
