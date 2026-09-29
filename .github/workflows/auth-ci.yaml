@@ -68,7 +68,7 @@ jobs:
         DB_NAME: auth_test_db
         DB_PORT: "5432"
         DB_SSL_MODE: disable
-        JWT_PRIVATE_KEY_PATH: test/fixtures/test_jwt_key.pem
+        JWT_PRIVATE_KEY_PATH: test/fixtures/test_jwt_private.pem
         JWT_ALGORITHM: "RS256"
         JWT_EXPIRE_MINUTES: "30"
       run: |
