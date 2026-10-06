@@ -1,0 +1,12 @@
+services:
+  auth-service:
+    build: .
+    container_name: auth-service
+    env_file:
+      - .env
+    networks:
+      - red_tesis
+
+networks:
+  red_tesis:
+    external: true

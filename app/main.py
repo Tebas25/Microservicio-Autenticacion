@@ -1,20 +1,24 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+
+from app.db.session import init_engine
+from app.api.v1.routers import router as auth_router
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_engine()
+    yield
+
 
 app = FastAPI(
     title="Auth Service - Bartender Robótico",
     description="Microservicio emisor de JWT y validación de usuarios",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
-# CORS: Permitir comunicación con Kong y React
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.include_router(auth_router)
 
 
 @app.get("/")
