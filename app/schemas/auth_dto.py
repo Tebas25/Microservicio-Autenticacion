@@ -13,7 +13,7 @@ class CreateUserDTO(BaseModel):
     @classmethod
     def validate_and_normalize_email(cls, v: str) -> str:
         try:
-            resultado = validate_email(v, check_deliverability=True)
+            resultado = validate_email(v, check_deliverability=False)
             return resultado.normalized
         except EmailNotValidError as e:
             raise ValueError(f"El correo electrónico no es válido: {str(e)}")
